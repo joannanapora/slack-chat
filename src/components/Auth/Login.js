@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FormContainer, ErrorMessage, Spinner, LoginContainer, FormHeader, FormInput, FormIcon, Root, FormLabel, Button, SpinnerContainer } from "../../styledComponents/FormStyled"
 import { Link } from 'react-router-dom';
 import firebase from "../../firebase";
+import { faEnvelopeSquare, faLock } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Login = () => {
 
@@ -75,7 +77,7 @@ const Login = () => {
                 }
                 <LoginContainer>Don't have an account?<Link style={{ marginLeft: '10px' }} to='/register'>REGISTER</Link></LoginContainer>
             </FormContainer>
-        </Root>
+        </Root >
     )
 }
 

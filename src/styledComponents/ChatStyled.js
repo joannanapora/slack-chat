@@ -11,8 +11,9 @@ export const SidePanel = styled.div`
 background-color: rgba(255, 255, 255, 0.8);
 text-align: center;
 font-size: 30px;
-background-color: orange;
+background-color: #FAFAFA;
 height:100vh;
+max-width:260px;
 `
 
 
@@ -46,62 +47,79 @@ display: flex;
 justify-content: center;
 align-items: center;
 width: 100%;
-font-family: helvetica;
-font-size: 40px;
-font-weight: 900;
-background-color: darkorange;
-`
+font-family: 'Crete Round', serif;
+font-size: 2rem;
+font-weight: 900;`
 
-export const StyledUl = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: transparent;
+export const DropDownContainer = styled("div")`
+  margin: 0 auto;
+  padding: 0 20px;
 `;
 
-export const StyledLi = styled.li`
-  float: left;
-`;
-
-export const Dropbtn = styled.div`
-  display: inline-block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-`;
-
-export const DropDownContent = styled.div`
-  display: none;
-  position: absolute;
-  background-color: transparent;
-  width: 300px;
-  z-index: 1;
-`;
-
-export const DropDownLi = styled(StyledLi)`
-  display: inline-block;
-  width: 300px;
-  &:hover {
-    background-color: darkorange;
-    cursor: pointer;
-  }
-  &:hover ${DropDownContent} {
-    display: block;
-    width: 300px;
-  }
-`;
-
-
-
-export const SubA = styled.a`
+export const DropDownHeader = styled("div")`
+  font-weight: 500;
+  font-family: 'Crete Round', serif;
+  font-size: 1.5rem;
   color: black;
-  padding: 12px 16px;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  
+`;
+
+export const DropDownListContainer = styled("div")`
+`;
+
+export const DropDownList = styled("div")`
+padding: 20px;
+width: 200px;
+height: 150px;
+`;
+
+export const ListItem = styled("button")`
+  list-style: none;
+  width: 100%;
   text-decoration: none;
-  display: block;
-  text-align: left;
+  display:flex;
+  cursor: pointer;
+  text-align: center;
+  background-color: white;
+  border: none;
+  padding: 1rem;
+  outline: none;
   &:hover {
     background-color: darkorange;
+    &:disabled {
+      background-color: white;
+      cursor: auto
+    }
   }
 `;
+
+export const UpArrow = styled("div")`
+border: solid black;
+padding: 4px;
+margin: 0 0 3px 12px;
+border-width: 0 3px 3px 0;
+display: inline-block;
+transform: rotate(-135deg);
+-webkit-transform: rotate(-135deg);
+`;
+
+export const DownArrow = styled("div")`
+border: solid black;
+border-width: 0 3px 3px 0;
+display: inline-block;
+transform: rotate(45deg);
+-webkit-transform: rotate(45deg);
+padding: 4px;
+margin: 0 0 3px 12px;
+`;
+
+export const Image = styled.img`
+padding: 10px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+margin-right: 20px;
+`

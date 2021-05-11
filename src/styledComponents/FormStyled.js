@@ -55,14 +55,15 @@ font-size: 14px;
 margin-bottom: 5px;
 `
 export const FormInput = styled.input`
-width:300px;
 height: 40px;
 border: 0.4px black;
 -moz-border-radius: 1em;
 margin-bottom: 15px;
 outline-color: orange;
 font-size: 20px;
-padding:3px
+padding: 3px 15px
+font-family: 'Crete Round', serif;
+min-width: 300px;
 `
 
 export const Button = styled.button`
@@ -84,8 +85,25 @@ ${props => props.primary && css`
   `}
   ${props => props.secondary && css`
     background: white;
+    width:100px;
+    &:hover {
+      border: 2px solid orange;
+    }
   `}
 `
+export const TextArea = styled.textarea`
+max-width:300px;
+min-width: 300px;
+max-height: 400px;
+min-height: 40px;
+border: 0.4px black;
+-moz-border-radius: 1em;
+margin-bottom: 15px;
+outline-color: orange;
+font-size: 20px;
+font-family: 'Crete Round', serif;
+`
+
 
 export const LoginContainer = styled.div`
 width:300px;
