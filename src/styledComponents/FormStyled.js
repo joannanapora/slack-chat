@@ -95,6 +95,28 @@ ${props => props.primary && css`
   height: 50px;
   background-color: orange;
 `}
+${props => props.reply && css`
+  width: 100%;
+  height: 40px;
+  background-color: orange;
+  margin: 10px 0;
+  outline: none;
+  &:hover {
+    border: 3px solid white;
+  }
+`}
+${props => props.upload && css`
+  width: 100%;
+  outline: none;
+
+  height: 40px;
+  background-color: black;
+  color:white;
+  margin: 10px 0;
+  &:hover {
+    border: 3px solid white;
+  }
+`}
 `
 export const TextArea = styled.textarea`
 max-width:300px;

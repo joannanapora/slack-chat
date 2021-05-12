@@ -26,7 +26,6 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     };
 
     const [modal, setModal] = useState(false);
-    const [openChannels, setOpenChannels] = useState(false);
     const [ChannelList, setChannelList] = useState([]);
     const [firstLoad, setFirstLoad] = useState(true);
     const [activeChannel, setActiveChannel] = useState('');
@@ -38,34 +37,32 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     })
 
     useEffect(() => {
-        addListener()
+        if (firstLoad && ChannelList.length > 0) {
+            setActiveChannel(ChannelList[0].id);
+            setCurrentChannel(ChannelList[0])
+        }
         return () => {
             removeListener();
         }
+    }, [ChannelList]);
+
+    useEffect(() => {
+        addListener();
     }, [])
 
-    const addListener = () => {
+    const addListener = async () => {
         let loadedChannels = [];
-        channel.ref.on('child_added', snap => {
-            loadedChannels.push(snap.val());
-            setChannelList([...ChannelList, ...loadedChannels]);
-            setFirstChannel();
-        });
+        channel.ref
+            .on('child_added', snap => {
+                loadedChannels.push(snap.val());
+                setChannelList([...ChannelList, ...loadedChannels]);
+            })
     }
 
     const removeListener = () => {
         channel.ref.off();
     }
 
-    const setFirstChannel = () => {
-
-        const firstChannel = ChannelList[0]
-
-        if (firstLoad && ChannelList.length > 0) {
-            setCurrentChannel(firstChannel)
-        }
-        setFirstLoad(false);
-    }
 
     const closeModal = () => {
         setModal(false);
@@ -130,15 +127,12 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
         setCurrentChannel(channelProp)
     }
 
-    const openChannelTab = () => {
-        setOpenChannels(!openChannels)
-    }
 
     return (
         <>
-            <ChannelsContainer onClick={openChannelTab} ><FontAwesomeIcon style={{ marginRight: '5px' }} icon={faExchangeAlt} />CHANNELS<p style={{ marginLeft: '5px' }} >({ChannelList.length})</p><AddIcon onClick={openModal} ><FontAwesomeIcon icon={faPlus} /></AddIcon ></ChannelsContainer>
+            <ChannelsContainer><FontAwesomeIcon style={{ marginRight: '5px' }} icon={faExchangeAlt} />CHANNELS<p style={{ marginLeft: '5px' }} >({ChannelList.length})</p><AddIcon onClick={openModal} ><FontAwesomeIcon icon={faPlus} /></AddIcon ></ChannelsContainer>
 
-            {openChannels && displayChannels()}
+            {displayChannels()}
 
             <Modal
                 appElement={document.getElementById('root')}

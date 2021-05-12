@@ -3,16 +3,17 @@ import React from 'react';
 // import Messages from './Chat/Messages';
 // import MetaPanel from './Chat/MetaPanel';
 import LeftPanel from './Chat/SidePanel/UserSettings';
-import { MetaPanel, Messages, AppContainer, SidePanel } from '../styledComponents/ChatStyled';
+import { MetaPanel, AppContainer, SidePanel } from '../styledComponents/ChatStyled';
 import { connect } from 'react-redux';
 import ColorPanel from './Chat/ColorPanel/ColorPanel';
+import Messages from './Chat/Messages/Messages';
 
-const Application = ({ currentUser }) => {
+const Application = ({ currentUser, currentChannel }) => {
   return (
     <AppContainer>
       <ColorPanel></ColorPanel>
-      <SidePanel><LeftPanel currentUser={currentUser} /></SidePanel>
-      <Messages>dwd</Messages>
+      <SidePanel><LeftPanel key={currentUser && currentUser.uid} currentUser={currentUser} /></SidePanel>
+      <Messages key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} >dwd</Messages>
       <MetaPanel>dfd</MetaPanel>
     </AppContainer>
   );
@@ -20,7 +21,8 @@ const Application = ({ currentUser }) => {
 
 
 const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
+  currentUser: state.user.currentUser,
+  currentChannel: state.channel.currentChannel
 });
 
 export default connect(mapStateToProps)(Application);

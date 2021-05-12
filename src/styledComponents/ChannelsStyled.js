@@ -43,3 +43,94 @@ height: 100%;
 display:flex;
 justify-content: center;
 `
+
+
+export const MessagesContainer = styled.div`
+display:flex;
+flex-direction: column;
+background: transparent;
+`
+
+
+export const ChannelHeader = styled.div`
+display:flex;
+background: #FAFAFA;
+height: 50px;
+box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+margin: 10px 20px;
+padding: 20px;
+`
+
+export const HeaderRight = styled.div`
+display:flex;
+flex-direction: column;
+align-items:start;
+font-size: 20px;
+font-family: 'Crete Round', serif;
+width: 100%;
+`
+
+export const HeaderLeft = styled.div`
+display:flex;
+align-items:start;
+font-size: 20px;
+font-family: 'Crete Round', serif;
+width: 100%;
+padding: 0 30px;
+`
+
+export const SearchInput = styled.input`
+padding: 10px;
+width:100%;
+outline-color: orange;
+
+`
+
+export const Divider = styled.div`
+display:flex;
+background: #FAFAFA;
+box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+margin: 0 20px;
+padding: 10px;
+height: 600px;
+overflow-y: scroll;
+`
+
+
+export const NewMessage = styled.div`
+display:flex;
+background: #FAFAFA;
+flex-direction: column;
+height: auto;
+box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+margin: 10px 20px;
+padding: 20px;
+position: fixed;
+bottom:1em;
+margin-left: 320px;
+left: 0;
+right: 1em;
+z-index: 200;
+`
+
+export const WriteMessage = styled.div`
+width:100%;
+display:flex;
+border: 0.3px solid black;
+`
+
+export const MessageInput = styled.input`
+padding: 10px;
+width:100%;
+outline-color: orange;
+border: none;
+${props => props.error && css`
+    background-color:red;
+    opacity: 0.7;
+  `}
+`
+
+export const ButtonContainer = styled.div`
+width:100%;
+display:flex;
+`
