@@ -3,8 +3,7 @@ import styled from 'styled-components'
 
 export const AppContainer = styled.div`
 display: grid;
-grid-template-columns: repeat(3, 1fr);
-grid-gap: 10px;
+grid-template-columns: 80px 1fr 1fr 1fr ;
 `
 
 export const SidePanel = styled.div`
@@ -64,7 +63,8 @@ export const DropDownHeader = styled("div")`
   background-color: transparent;
   cursor: pointer;
   display: flex;
-  
+  justify-content: center;
+  align-items: center;
 `;
 
 export const DropDownListContainer = styled("div")`

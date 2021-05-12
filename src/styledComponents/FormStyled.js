@@ -90,6 +90,11 @@ ${props => props.primary && css`
       border: 2px solid orange;
     }
   `}
+  ${props => props.sidebar && css`
+  width: 50px;
+  height: 50px;
+  background-color: orange;
+`}
 `
 export const TextArea = styled.textarea`
 max-width:300px;

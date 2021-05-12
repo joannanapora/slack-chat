@@ -10,7 +10,7 @@ import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './redux/reducers';
-import { setUser, clearUser } from './redux';
+import { setUser, clearUser } from './redux/actions';
 
 
 const store = createStore(rootReducer, composeWithDevTools())

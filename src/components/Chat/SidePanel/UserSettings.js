@@ -31,7 +31,7 @@ const LeftPanel = ({ currentUser }) => {
                 <p>DevChat</p>
             </Header>
             <DropDownContainer>
-                <DropDownHeader onClick={handleDropdown}><Image src={currentUser?.photoURL} ></Image><p>{currentUser?.displayName}{!dropdown ? <DownArrow /> : <UpArrow />}</p></DropDownHeader>
+                <DropDownHeader onClick={handleDropdown}><Image src={currentUser?.photoURL} ></Image><div>{currentUser?.displayName}{!dropdown ? <DownArrow /> : <UpArrow />}</div></DropDownHeader>
                 {dropdown && (
                     <DropDownListContainer>
                         <DropDownList>
@@ -41,7 +41,7 @@ const LeftPanel = ({ currentUser }) => {
                         </DropDownList>
                     </DropDownListContainer>
                 )}
-                <Channels />
+                <Channels currentUser={currentUser} />
             </DropDownContainer>
         </div >
     )
