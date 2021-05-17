@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { FormContainer, ErrorMessage, Spinner, LoginContainer, FormHeader, FormInput, FormIcon, Root, FormLabel, Button, SpinnerContainer } from "../../styledComponents/FormStyled"
 import { Link } from 'react-router-dom';
 import firebase from "../../firebase";
-import { faEnvelopeSquare, faLock } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Login = () => {
 
@@ -57,16 +55,22 @@ const Login = () => {
         }
     }
 
+    const checkifEnter = (e) => {
+        if (e.key === "Enter") {
+            handleSubmit()
+        }
+    }
+
 
     return (
         <Root>
             <FormContainer>
-                <FormIcon src='https://www.flaticon.com/svg/vstatic/svg/3440/3440422.svg?token=exp=1620380798~hmac=77160ac20d0b46c6d78f1a6869bf622f' alt='parrot'></FormIcon>
+                <FormIcon src='https://img-premium.flaticon.com/png/512/1355/1355890.png?token=exp=1621261244~hmac=e47ee724eca16d90020ca44f04b657ec' alt='parrot'></FormIcon>
                 <FormHeader>Login for DevChat</FormHeader>
                 <FormLabel>Email Address</FormLabel>
-                <FormInput type='text' value={details.email} onChange={(e) => { onValueChange(e, 'email') }} ></FormInput>
+                <FormInput onKeyDown={checkifEnter} type='text' value={details.email} onChange={(e) => { onValueChange(e, 'email') }} ></FormInput>
                 <FormLabel>Password</FormLabel>
-                <FormInput type='password' value={details.password} onChange={(e) => { onValueChange(e, 'password') }} ></FormInput>
+                <FormInput onKeyDown={checkifEnter} type='password' value={details.password} onChange={(e) => { onValueChange(e, 'password') }} ></FormInput>
                 {details.errors.length > 0 &&
                     <ErrorMessage>{details.errors[details.errors.length - 1].message}</ErrorMessage>
                 }

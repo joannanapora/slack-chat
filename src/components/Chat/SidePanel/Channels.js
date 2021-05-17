@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChannelsContainer, AddIcon, Channel } from '../../../styledComponents/ChannelsStyled';
+import { ChannelsContainer, AddIcon, Channel, ScrollChannel } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt, faPlus, faCheck, faTimes, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { Button, FormHeader, FormInput, TextArea } from "../../../styledComponents/FormStyled"
@@ -27,7 +27,6 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
 
     const [modal, setModal] = useState(false);
     const [ChannelList, setChannelList] = useState([]);
-    const [firstLoad, setFirstLoad] = useState(true);
     const [activeChannel, setActiveChannel] = useState('');
 
     const [channel, setChannel] = useState({
@@ -37,18 +36,11 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     })
 
     useEffect(() => {
-        if (firstLoad && ChannelList.length > 0) {
-            setActiveChannel(ChannelList[0].id);
-            setCurrentChannel(ChannelList[0])
-        }
+        addListener()
         return () => {
             removeListener();
         }
-    }, [ChannelList]);
-
-    useEffect(() => {
-        addListener();
-    }, [])
+    }, []);
 
     const addListener = async () => {
         let loadedChannels = [];
@@ -57,12 +49,14 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
                 loadedChannels.push(snap.val());
                 setChannelList([...ChannelList, ...loadedChannels]);
             })
+        if (ChannelList.length > 0) {
+            changeChannel(ChannelList[0])
+        }
     }
 
     const removeListener = () => {
         channel.ref.off();
     }
-
 
     const closeModal = () => {
         setModal(false);
@@ -99,11 +93,12 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
                 setChannel({ ...channel, name: "", info: "" });
             })
             .catch((error) => {
-
                 console.log(error)
             })
 
     }
+
+
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -131,9 +126,9 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     return (
         <>
             <ChannelsContainer><FontAwesomeIcon style={{ marginRight: '5px' }} icon={faExchangeAlt} />CHANNELS<p style={{ marginLeft: '5px' }} >({ChannelList.length})</p><AddIcon onClick={openModal} ><FontAwesomeIcon icon={faPlus} /></AddIcon ></ChannelsContainer>
-
-            {displayChannels()}
-
+            <ScrollChannel>
+                {displayChannels()}
+            </ScrollChannel>
             <Modal
                 appElement={document.getElementById('root')}
                 isOpen={modal}
@@ -143,7 +138,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
             >
                 <FormHeader>Add a Channel</FormHeader>
                 <h3>Channel's Name</h3>
-                <FormInput value={channel.name} onChange={(e) => onChange(e, 'name')} ></FormInput>
+                <FormInput maxLength={16} value={channel.name} onChange={(e) => onChange(e, 'name')} ></FormInput>
                 <h3>Channels' Info</h3>
                 <TextArea value={channel.info} onChange={(e) => onChange(e, 'info')}></TextArea>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>

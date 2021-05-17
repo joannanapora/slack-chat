@@ -31,12 +31,12 @@ font-size: 30px;
 `
 
 export const ChatIcon = styled.img`
-width: 60px;
-height: 60px;
+width: 30px;
+height: 30px;
 margin-right: 20px;
 @media (max-width: 768px) {
-  width: 50px;
-    height: 50px;
+  width: 30px;
+height: 30px;
 }
 `
 
@@ -88,7 +88,7 @@ export const ListItem = styled("button")`
   padding: 1rem;
   outline: none;
   &:hover {
-    background-color: darkorange;
+    background-color: #f0c419;
     &:disabled {
       background-color: white;
       cursor: auto

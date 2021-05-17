@@ -59,7 +59,7 @@ height: 40px;
 border: 0.4px black;
 -moz-border-radius: 1em;
 margin-bottom: 15px;
-outline-color: orange;
+outline-color: #f0c419;
 font-size: 20px;
 padding: 3px 15px
 font-family: 'Crete Round', serif;
@@ -76,29 +76,29 @@ display:flex;
 align-items:center;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 cursor: pointer;
-outline-color: orange;
+outline-color: #f0c419;
 &:hover {
     border: 2px solid black;
   }
 ${props => props.primary && css`
-    background: orange;
+    background-color: #f0c419;
   `}
   ${props => props.secondary && css`
     background: white;
     width:100px;
     &:hover {
-      border: 2px solid orange;
+      border: 2px solid #f0c419;
     }
   `}
   ${props => props.sidebar && css`
   width: 50px;
   height: 50px;
-  background-color: orange;
+  background-color: #f0c419;
 `}
 ${props => props.reply && css`
   width: 100%;
   height: 40px;
-  background-color: orange;
+  background-color: #f0c419;
   margin: 10px 0;
   outline: none;
   &:hover {
@@ -126,7 +126,7 @@ min-height: 40px;
 border: 0.4px black;
 -moz-border-radius: 1em;
 margin-bottom: 15px;
-outline-color: orange;
+outline-color: #f0c419
 font-size: 20px;
 font-family: 'Crete Round', serif;
 `
@@ -143,8 +143,7 @@ align-items:center;
 
 export const ErrorMessage = styled.p`
 display: flex;
-width: 100%;
-margin-left: 50px;
+width: 80%;
 font-size: 11px;
 margin-bottom: 5px;
 color: red;
@@ -169,7 +168,7 @@ justify-content:center;
 display:flex;
 align-items:center;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-background-color: orange;
+background-color: #f0c419
 ${props => props.wholepage && css`
     background-color: white;
     width:100%;
@@ -180,7 +179,7 @@ ${props => props.wholepage && css`
 `
 export const Spinner = styled.div`
     border: 4px solid #f3f3f3;
-    border-top: 4px solid orange;
+    border-top: 4px solid #f0c419
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -194,6 +193,6 @@ export const Spinner = styled.div`
   width: 200px;
   height: 200px;
   border: 12px solid #f3f3f3;
-    border-top: 12px solid orange;
+    border-top: 12px solid #f0c419
   `}
 `

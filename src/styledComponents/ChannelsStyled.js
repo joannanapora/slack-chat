@@ -65,7 +65,7 @@ export const HeaderRight = styled.div`
 display:flex;
 flex-direction: column;
 align-items:start;
-font-size: 20px;
+font-size: 18px;
 font-family: 'Crete Round', serif;
 width: 100%;
 `
@@ -82,18 +82,19 @@ padding: 0 30px;
 export const SearchInput = styled.input`
 padding: 10px;
 width:100%;
-outline-color: orange;
+outline-color: #f0c419
 
 `
 
-export const Divider = styled.div`
+export const MsgWindow = styled.div`
 display:flex;
+flex-direction:column;
 background: #FAFAFA;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 0 20px;
 padding: 10px;
-height: 600px;
 overflow-y: scroll;
+height: 30rem;
 `
 
 
@@ -122,7 +123,7 @@ border: 0.3px solid black;
 export const MessageInput = styled.input`
 padding: 10px;
 width:100%;
-outline-color: orange;
+outline-color: #f0c419
 border: none;
 ${props => props.error && css`
     background-color:red;
@@ -133,4 +134,69 @@ ${props => props.error && css`
 export const ButtonContainer = styled.div`
 width:100%;
 display:flex;
+`
+
+export const MsgLeft = styled.div`
+width: 100%;
+display: flex;
+justify-content: flex-end;
+`
+
+
+export const Comment = styled.div`
+width: 100%;
+display: flex;
+justify-content: start;
+margin: 10px 10px;
+`
+
+export const AvatarContainer = styled.img`
+width: 40px;
+height: 40px;
+`
+
+
+export const MsgContent = styled.div`
+display: flex;
+flex-direction: column;
+border-left: 5px solid #f0c419
+margin: 10px 10px;
+padding: 0 10px;
+overflow-wrap: break-word;
+word-wrap: break-word;
+hyphens: auto;
+`
+
+export const Username = styled.div`
+font-size: 14px
+`
+
+export const Date = styled.div`
+font-size: 13px;
+color: grey;
+margin: 0 5px;
+`
+
+export const Text = styled.div`
+max-width: 500px;
+min-width: 100px;
+font-size: 12px;
+margin-top: 10px;
+`
+
+export const ScrollChannel = styled.div`
+overflow-y: scroll;
+overflow-x: hidden;
+height: 25rem;
+`
+
+
+export const NoChannel = styled.div`
+width: 100%, 
+justify-content: center;
+align-items: center;
+display: flex;
+flex-direction: column; 
+margin: 50px;
+opacity: 0.5;
 `

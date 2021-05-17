@@ -27,7 +27,7 @@ const LeftPanel = ({ currentUser }) => {
     return (
         <div >
             <Header>
-                <ChatIcon src='https://www.flaticon.com/svg/vstatic/svg/3440/3440422.svg?token=exp=1620380798~hmac=77160ac20d0b46c6d78f1a6869bf622f' alt='parrot' />
+                <ChatIcon src='https://img-premium.flaticon.com/png/512/1355/1355890.png?token=exp=1621261244~hmac=e47ee724eca16d90020ca44f04b657ec' alt='parrot' />
                 <p>DevChat</p>
             </Header>
             <DropDownContainer>
