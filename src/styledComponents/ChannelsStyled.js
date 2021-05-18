@@ -199,4 +199,11 @@ display: flex;
 flex-direction: column; 
 margin: 50px;
 opacity: 0.5;
+font-size: 1rem;
+`
+
+export const WrapFileName = styled.p`
+text-overflow: ellipsis;
+overflow: hidden;
+white-space: nowrap;
 `

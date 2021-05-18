@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import 'firebase/database';
+import 'firebase/storage';
 
 
 var firebaseConfig = {
@@ -12,8 +13,11 @@ var firebaseConfig = {
     storageBucket: "slack-chat-926b4.appspot.com",
     messagingSenderId: "832601189065",
     appId: "1:832601189065:web:8d2f59d780e2618ec83b18",
-    measurementId: "G-GLN6B5WS7E"
+    measurementId: "G-GLN6B5WS7E",
+
 };
+
+
 firebase.initializeApp(firebaseConfig);
 
 export default firebase;
