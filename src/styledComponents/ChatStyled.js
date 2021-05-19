@@ -12,7 +12,7 @@ text-align: center;
 font-size: 30px;
 background-color: #FAFAFA;
 height:100vh;
-max-width:260px;
+max-width: 260px;
 `
 
 
@@ -71,8 +71,7 @@ export const DropDownListContainer = styled("div")`
 `;
 
 export const DropDownList = styled("div")`
-padding: 20px;
-width: 200px;
+width: 150px;
 height: 150px;
 `;
 
@@ -87,6 +86,7 @@ export const ListItem = styled("button")`
   border: none;
   padding: 1rem;
   outline: none;
+  margin-left: 20px;
   &:hover {
     background-color: #f0c419;
     &:disabled {

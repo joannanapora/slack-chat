@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { MessagesContainer, NoChannel, ButtonContainer, MessageInput, WriteMessage, NewMessage, MsgWindow, SearchInput, ChannelHeader, HeaderLeft, HeaderRight } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faSearch, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../styledComponents/FormStyled';
 import Msg from './Msg';
 import FileModal from './FileModal';
@@ -34,7 +34,6 @@ const Messages = ({ currentChannel, currentUser }) => {
         errors: [],
         messagesLoading: true,
     });
-    const [percentUplouded, setPercentUplouded] = useState(0);
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('')
     const [storageRef, setStorageRef] = useState(firebase.storage().ref())
@@ -42,6 +41,10 @@ const Messages = ({ currentChannel, currentUser }) => {
     const [uploudState, setUploadState] = useState('')
     const [messages, setMessages] = useState([]);
     const [modal, setModal] = useState(false);
+    const [users, setUsers] = useState('');
+    const [messageSearch, setMessageSearch] = useState('');
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [searchList, setSearchResult] = useState([])
 
     const openModal = () => {
         setModal(true)
@@ -63,8 +66,6 @@ const Messages = ({ currentChannel, currentUser }) => {
     const next = useCallback(
 
         () => {
-            console.log('onsend uploudtask' + uploudTask)
-
             const pathToUpload = currentChannel.id;
             const reference = message.ref;
             uploudTask.snapshot.ref.getDownloadURL()
@@ -78,11 +79,6 @@ const Messages = ({ currentChannel, currentUser }) => {
 
     const onSend = () => {
         closeModal(true)
-        console.log(percentUplouded + 'ileee')
-        uploudTask.on('state_changed', snap => {
-            const percents = Math.round((snap.bytesTransfered / snap.totalBytes) * 100);
-            setPercentUplouded(percents);
-        });
         next();
     }
 
@@ -97,17 +93,34 @@ const Messages = ({ currentChannel, currentUser }) => {
         addMessageListener(channelId)
     };
 
+    useEffect(() => {
+        handleSearchMessages();
+    }, [messageSearch])
+
     const addMessageListener = (channelId) => {
         let loadedMessages = [];
         message.ref.child(channelId).on('child_added', snap => {
             loadedMessages.push(snap.val());
             setMessage({ ...message, messagesLoading: false })
             setMessages(loadedMessages)
+            countUniqueUsers(loadedMessages)
         })
+    }
+
+    const countUniqueUsers = (messages) => {
+        const uniqueUsers = messages.reduce((acc, message) => {
+            if (!acc.includes(message.user.name)) {
+                acc.push(message.user.name)
+            }
+            return acc;
+        }, [])
+        const numUniqueUsers = `${uniqueUsers.length} User${uniqueUsers.length === 1 ? "" : "s"}`
+        setUsers(numUniqueUsers)
     }
 
 
     const handleChange = (event) => {
+        console.log('czy wpada')
         setMessage({ ...message, message: event.target.value })
     };
 
@@ -150,8 +163,8 @@ const Messages = ({ currentChannel, currentUser }) => {
         }
     };
 
-    const displayMessages = () => {
-        return messages.length > 0 && messages.map((el) => {
+    const displayMessages = (prop) => {
+        return prop.length > 0 && prop.map((el) => {
             return (
                 <Msg
                     key={el.timestamp}
@@ -180,13 +193,29 @@ const Messages = ({ currentChannel, currentUser }) => {
             .set(createMessage(downloadUrl))
             .then(() => {
                 setUploadState('done')
-                console.log('wpada')
             })
             .catch(error => {
-                console.log(error)
             })
     }
 
+
+    const onMessageSearch = (e) => {
+        setMessageSearch(e.target.value);
+        setSearchLoading(true);
+    }
+
+
+    const handleSearchMessages = () => {
+        const channelMessages = [...messages];
+        const regex = new RegExp(messageSearch, 'gi');
+        const searchResult = channelMessages.reduce((acc, message) => {
+            if (message.content && message.content.match(regex) || message.user.name.match(regex)) {
+                acc.push(message)
+            }
+            return acc;
+        }, [])
+        setSearchResult(searchResult)
+    }
 
     return (
         <MessagesContainer>
@@ -202,18 +231,18 @@ const Messages = ({ currentChannel, currentUser }) => {
             <ChannelHeader>
                 <HeaderRight>
                     {currentChannel ? <div> {currentChannel.name} <FontAwesomeIcon size='1x' icon={faStar} />
+                        <div style={{ fontSize: '16px' }}>{users}</div>
                     </div>
                         : null}
-                    <div style={{ fontSize: '16px' }}>2 Users</div>
                 </HeaderRight>
                 <HeaderLeft>
-                    <SearchInput placeholder='Search Messages' ></SearchInput><FontAwesomeIcon style={{ padding: '10px' }} size='1x' icon={faSearch} />
+                    <SearchInput onChange={onMessageSearch} placeholder='Search...' ></SearchInput><FontAwesomeIcon style={{ padding: '10px' }} size='1x' icon={faSearch} />
                 </HeaderLeft>
             </ChannelHeader>
             {currentChannel === null ?
                 <MsgWindow>
                     <NoChannel>
-                        <img width='200px' height='200px' src='https://img-premium.flaticon.com/png/512/1355/1355890.png?token=exp=1621261244~hmac=e47ee724eca16d90020ca44f04b657ec' ></img>
+                        <img width='200px' height='200px' src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBhdGggc3R5bGU9ImZpbGw6I0MyN0I0ODsiIGQ9Ik01MTIsMzc2YzAsOC4zOTktNi41OTksMTUtMTUsMTVIMTk2Yy04LjQwMSwwLTE1LTYuNjAxLTE1LTE1YzAtOC40MDEsNi41OTktMTUsMTUtMTVoMjAwLjcNCglsMjUuOC01MS42MDFjMy45LTcuNSwxMi45LTEwLjQ5OSwyMC4wOTktNi44OTljNy41LDMuOSwxMC41MDEsMTIuOSw2LjkwMSwyMC4wOTlMNDMwLjMsMzYxSDQ5N0M1MDUuNDAxLDM2MSw1MTIsMzY3LjU5OSw1MTIsMzc2eiINCgkvPg0KPHBhdGggc3R5bGU9ImZpbGw6I0E2NjIzNTsiIGQ9Ik01MTIsMzc2YzAsOC4zOTktNi41OTksMTUtMTUsMTVIMjU2di0zMGgxNDAuN2wyNS44LTUxLjYwMWMzLjktNy41LDEyLjktMTAuNDk5LDIwLjA5OS02Ljg5OQ0KCWM3LjUsMy45LDEwLjUwMSwxMi45LDYuOTAxLDIwLjA5OUw0MzAuMywzNjFINDk3QzUwNS40MDEsMzYxLDUxMiwzNjcuNTk5LDUxMiwzNzZ6Ii8+DQo8cGF0aCBzdHlsZT0iZmlsbDojODA1MTQyOyIgZD0iTTMxNiwxODBjLTguMjkxLDAtMTUtNi43MDktMTUtMTV2LTYwYzAtOC4yOTEsNi43MDktMTUsMTUtMTVoNjBjOC4yOTEsMCwxNSw2LjcwOSwxNSwxNQ0KCUMzOTEsMTQ2LjM1MywzNTcuMzUzLDE4MCwzMTYsMTgweiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6I0MyN0I0ODsiIGQ9Ik0zMzEsMS4xOTljMCwwLTE1LDEwLjgtMzAsMjEuNjAxVjEwNWMwLDguMzk5LDYuNTk5LDE1LDE1LDE1aDkwYzguNDAxLDAsMTUtNi42MDEsMTUtMTUNCglDNDIxLDUyLjIsMzgxLjcsOC4zOTksMzMxLDEuMTk5eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzEwQkI2NzsiIGQ9Ik0zMTYsMGgtNzVjLTY2LjMwMSwwLTEyMCw1My42OTktMTIwLDEyMHYyNTZjMCw4LjM5OSw2LjU5OSwxNSwxNSwxNWg5MGMxMC40OTksMCwyMC40LTEuNSwzMC00LjUwMQ0KCWM0My4yLTEyLjksNzUtNTMuMTAxLDc1LTEwMC40OTlWMS4xOTlDMzI2LjIwMSwwLjMsMzIxLjA5OSwwLDMxNiwweiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzBDQTY1NjsiIGQ9Ik0zMzEsMS4xOTlWMjg2YzAsNDcuMzk5LTMxLjgsODcuNTk5LTc1LDEwMC40OTlWMGg2MEMzMjEuMDk5LDAsMzI2LjIwMSwwLjMsMzMxLDEuMTk5eiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6IzU3NTU1QzsiIGQ9Ik0yNzEsNzVjMCw4LjM5OS02LjU5OSwxNS0xNSwxNXMtMTUtNi42MDEtMTUtMTVjMC04LjQwMSw2LjU5OS0xNSwxNS0xNVMyNzEsNjYuNTk5LDI3MSw3NXoiLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiMzMkQ3MzY7IiBkPSJNMTgxLDE4Mi41Yy0yOS43LDYtNTMuMTAxLDI5LjctNTguODAxLDU5LjdjLTMwLjI5OCw1LjctNTQuMywyOS43LTYwLDYwDQoJQzYxLjMsMzA2LjcsNjEsMzExLjE5OSw2MSwzMTZjMCw4LjM5OSw2LjU5OSwxNSwxNSwxNWg2My4zYzM5LjYsMCw3MS43LTMyLjEsNzEuNy03MS43di00NC43QzE5Ny41LDIwMC43OTksMTgxLDE4Mi41LDE4MSwxODIuNXoiDQoJLz4NCjxwYXRoIHN0eWxlPSJmaWxsOiNGRUE4MzI7IiBkPSJNMTM2LDUxMmMtNDEuMzUzLDAtNzUtMzMuNjQ3LTc1LTc1di02MGMwLTguMjkxLDYuNzA5LTE1LDE1LTE1aDYwYzguMjkxLDAsMTUsNi43MDksMTUsMTV2MTIwDQoJQzE1MSw1MDUuMjkxLDE0NC4yOTEsNTEyLDEzNiw1MTJ6Ii8+DQo8cGF0aCBzdHlsZT0iZmlsbDojRkY0NjhDOyIgZD0iTTE5Niw0ODJjLTQxLjM1MywwLTc1LTMzLjY0Ny03NS03NXYtMzBjMC04LjI5MSw2LjcwOS0xNSwxNS0xNWg2MGM4LjI5MSwwLDE1LDYuNzA5LDE1LDE1djkwDQoJQzIxMSw0NzUuMjkxLDIwNC4yOTEsNDgyLDE5Niw0ODJ6Ii8+DQo8cGF0aCBzdHlsZT0iZmlsbDojM0MzQTQxOyIgZD0iTTI3MSw3NWMwLDguMzk5LTYuNTk5LDE1LTE1LDE1VjYwQzI2NC40MDEsNjAsMjcxLDY2LjU5OSwyNzEsNzV6Ii8+DQo8cGF0aCBzdHlsZT0iZmlsbDojNjFERTU2OyIgZD0iTTI1NiwyMTIuOGMtMTMuMi0xOS4yLTM0Ljc5OS0zMS44LTYwLTMxLjhjLTUuMDk5LDAtMTAuMjAxLDAuNTk5LTE1LDEuNXY3Ni44DQoJYzAsMjMuMTAxLTE4LjYsNDEuNy00MS43LDQxLjdINzZjLTQuNzk5LDAtOS4zLDAuMy0xMy44MDEsMS4xOTlDMjcuNCwzMDguOCwwLDMzOS4zOTksMCwzNzZjMCw4LjM5OSw2LjU5OSwxNSwxNSwxNWgxMjQuMw0KCWM1MC43LDAsOTQuODAxLTI4LjgwMSwxMTYuNy03MC44YzkuNi0xOC4zMDEsMTUtMzkuMDAxLDE1LTYwLjkwMUMyNzEsMjQyLjE5OSwyNjUuNiwyMjYsMjU2LDIxMi44eiIvPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo=" ></img>
                         <h2>
                             Welcome to DevChat <br />
                         </h2>
@@ -221,7 +250,7 @@ const Messages = ({ currentChannel, currentUser }) => {
                 </MsgWindow>
                 :
                 <MsgWindow>
-                    {displayMessages()}
+                    {messageSearch ? displayMessages(searchList) : displayMessages(messages)}
                 </MsgWindow>
             }
             <NewMessage>
@@ -229,8 +258,8 @@ const Messages = ({ currentChannel, currentUser }) => {
                     <MessageInput disabled={currentChannel === null} onKeyDown={checkifEnter} error={message.errors.includes('message')} onChange={handleChange} value={message.message} />
                 </WriteMessage>
                 <ButtonContainer>
-                    <Button onClick={openModal} upload>Upload Media</Button>
-                    <Button onClick={sendMessage} reply>Add Reply</Button>
+                    <Button disabled={currentChannel === null || uploudState === 'uplouding'} onClick={openModal} upload>Upload Media</Button>
+                    <Button disabled={currentChannel === null || uploudState === 'uplouding'} onClick={sendMessage} reply>Add Reply</Button>
                 </ButtonContainer>
             </NewMessage>
         </MessagesContainer>

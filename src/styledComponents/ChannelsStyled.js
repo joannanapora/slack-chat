@@ -59,6 +59,7 @@ height: 50px;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 10px 20px;
 padding: 20px;
+
 `
 
 export const HeaderRight = styled.div`
@@ -94,7 +95,7 @@ box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 0 20px;
 padding: 10px;
 overflow-y: scroll;
-height: 30rem;
+height: 28rem;
 `
 
 
@@ -142,7 +143,6 @@ display: flex;
 justify-content: flex-end;
 `
 
-
 export const Comment = styled.div`
 width: 100%;
 display: flex;
@@ -159,12 +159,15 @@ height: 40px;
 export const MsgContent = styled.div`
 display: flex;
 flex-direction: column;
-border-left: 5px solid #f0c419
 margin: 10px 10px;
 padding: 0 10px;
 overflow-wrap: break-word;
 word-wrap: break-word;
 hyphens: auto;
+${props => props.mine && css`
+border-left: 5px solid #f0c419;
+
+  `}
 `
 
 export const Username = styled.div`

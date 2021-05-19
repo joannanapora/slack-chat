@@ -14,7 +14,7 @@ width: 350px;
 display: flex;
 flex-direction: column;
 background-color: #EBECF0;
-height: 570px;
+height: 500px;
 justify-content: center;
 align-items:center;
 position: relative;
@@ -37,9 +37,9 @@ position: absolute;
 top: -12%;
 left: 0%;
 @media (min-width: 768px) {
-  width: 155px;
-height: 155px;
-top: -18%;
+  width: 140px;
+height: 140px;
+top: -21%;
 left: 0%;
 }
 `
