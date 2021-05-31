@@ -8,12 +8,12 @@ import { connect } from 'react-redux';
 import ColorPanel from './Chat/ColorPanel/ColorPanel';
 import Messages from './Chat/Messages/Messages';
 
-const Application = ({ currentUser, currentChannel }) => {
+const Application = ({ currentUser, currentChannel, isPrivateChannel }) => {
   return (
     <AppContainer>
       <ColorPanel></ColorPanel>
       <SidePanel><LeftPanel key={currentUser && currentUser.uid} currentUser={currentUser} /></SidePanel>
-      <Messages key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} >dwd</Messages>
+      <Messages isPrivateChannel={isPrivateChannel} key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} >dwd</Messages>
       <MetaPanel>dfd</MetaPanel>
     </AppContainer>
   );
@@ -22,7 +22,9 @@ const Application = ({ currentUser, currentChannel }) => {
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
-  currentChannel: state.channel.currentChannel
+  currentChannel: state.channel.currentChannel,
+  isPrivateChannel: state.channel.isPrivateChannel,
+
 });
 
 export default connect(mapStateToProps)(Application);

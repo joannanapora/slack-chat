@@ -46,29 +46,30 @@ justify-content: center;
 
 
 export const MessagesContainer = styled.div`
-display:flex;
 flex-direction: column;
 background: transparent;
 `
 
 
 export const ChannelHeader = styled.div`
-display:flex;
+display: flex;
 background: #FAFAFA;
 height: 50px;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 10px 20px;
 padding: 20px;
-
+justify-content: space-between;
+align-items: center;
+@media (max-width: 1100px) {
+  flex-direction: column;
+  }
 `
 
 export const HeaderRight = styled.div`
 display:flex;
-flex-direction: column;
 align-items:start;
 font-size: 18px;
 font-family: 'Crete Round', serif;
-width: 100%;
 `
 
 export const HeaderLeft = styled.div`
@@ -76,15 +77,12 @@ display:flex;
 align-items:start;
 font-size: 20px;
 font-family: 'Crete Round', serif;
-width: 100%;
-padding: 0 30px;
+margin: 0.5rem 0;
 `
 
 export const SearchInput = styled.input`
-padding: 10px;
-width:100%;
+padding: 0.5rem;
 outline-color: #f0c419
-
 `
 
 export const MsgWindow = styled.div`
@@ -109,7 +107,7 @@ margin: 10px 20px;
 padding: 20px;
 position: fixed;
 bottom:1em;
-margin-left: 320px;
+margin-left: 360px;
 left: 0;
 right: 1em;
 z-index: 200;
@@ -147,7 +145,7 @@ export const Comment = styled.div`
 width: 100%;
 display: flex;
 justify-content: start;
-margin: 10px 10px;
+margin: 0px 10px;
 `
 
 export const AvatarContainer = styled.img`
@@ -187,10 +185,10 @@ font-size: 12px;
 margin-top: 10px;
 `
 
-export const ScrollChannel = styled.div`
-overflow-y: scroll;
+export const ChannelDiv = styled.div`
 overflow-x: hidden;
-height: 25rem;
+height: auto;
+padding-bottom: 2rem;
 `
 
 
@@ -209,4 +207,10 @@ export const WrapFileName = styled.p`
 text-overflow: ellipsis;
 overflow: hidden;
 white-space: nowrap;
+`
+
+export const ScrollChannels = styled.div`
+overflow-y: auto;
+height:80vh;
+padding: 0 40px 0 10px;
 `

@@ -12,7 +12,7 @@ text-align: center;
 font-size: 30px;
 background-color: #FAFAFA;
 height:100vh;
-max-width: 260px;
+min-width: 280px;
 `
 
 
@@ -32,11 +32,11 @@ font-size: 30px;
 
 export const ChatIcon = styled.img`
 width: 30px;
-height: 30px;
+height: 10vh;
 margin-right: 20px;
 @media (max-width: 768px) {
-  width: 30px;
-height: 30px;
+width: 30px;
+height: 10vh;
 }
 `
 
@@ -52,13 +52,13 @@ font-weight: 900;`
 
 export const DropDownContainer = styled("div")`
   margin: 0 auto;
-  padding: 0 20px;
+  height: 10vh;
 `;
 
 export const DropDownHeader = styled("div")`
   font-weight: 500;
   font-family: 'Crete Round', serif;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: black;
   background-color: transparent;
   cursor: pointer;
@@ -118,8 +118,7 @@ margin: 0 0 3px 12px;
 
 export const Image = styled.img`
 padding: 10px;
-width: 50px;
-height: 50px;
+width: 40px;
+height: 40px;
 border-radius: 50%;
-margin-right: 20px;
 `

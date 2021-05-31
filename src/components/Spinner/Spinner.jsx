@@ -6,7 +6,7 @@ const LoadingPage = () => {
     return (
         <Root>
             <FormContainer>
-                <SpinnerContainer wholepage><Spinner wholepage /></SpinnerContainer>
+                <SpinnerContainer ><Spinner /></SpinnerContainer>
             </FormContainer>
         </Root>
     )

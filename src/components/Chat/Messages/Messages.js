@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { MessagesContainer, NoChannel, ButtonContainer, MessageInput, WriteMessage, NewMessage, MsgWindow, SearchInput, ChannelHeader, HeaderLeft, HeaderRight } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faSearch, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '../../../styledComponents/FormStyled';
+import { faStar, faSearch, faAt } from '@fortawesome/free-solid-svg-icons';
+import { Button, Spinner } from '../../../styledComponents/FormStyled';
 import Msg from './Msg';
 import FileModal from './FileModal';
 import firebase from '../../../firebase';
 import Modal from 'react-modal';
 import { v4 as uuid } from 'uuid';
-
+import LoadingPage from '../../Spinner/Spinner';
 
 const customStyles = {
     content: {
@@ -25,7 +25,7 @@ const customStyles = {
     }
 };
 
-const Messages = ({ currentChannel, currentUser }) => {
+const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
     const [message, setMessage] = useState({
         ref: firebase.database().ref('messages'),
@@ -34,6 +34,7 @@ const Messages = ({ currentChannel, currentUser }) => {
         errors: [],
         messagesLoading: true,
     });
+    const [isPrivate, setIsPrivate] = useState(isPrivateChannel);
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('')
     const [storageRef, setStorageRef] = useState(firebase.storage().ref())
@@ -43,8 +44,8 @@ const Messages = ({ currentChannel, currentUser }) => {
     const [modal, setModal] = useState(false);
     const [users, setUsers] = useState('');
     const [messageSearch, setMessageSearch] = useState('');
+    const [searchList, setSearchResult] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
-    const [searchList, setSearchResult] = useState([])
 
     const openModal = () => {
         setModal(true)
@@ -61,6 +62,7 @@ const Messages = ({ currentChannel, currentUser }) => {
         const filePath = `chat/public/${uuid()}.jpg`;
         setUploadState('uplouding');
         setUploadTask(storageRef.child(filePath).put(acceptedFiles[0]));
+        setMessage({ ...message, loading: true })
     };
 
     const next = useCallback(
@@ -120,7 +122,6 @@ const Messages = ({ currentChannel, currentUser }) => {
 
 
     const handleChange = (event) => {
-        console.log('czy wpada')
         setMessage({ ...message, message: event.target.value })
     };
 
@@ -193,6 +194,7 @@ const Messages = ({ currentChannel, currentUser }) => {
             .set(createMessage(downloadUrl))
             .then(() => {
                 setUploadState('done')
+                setMessage({ ...message, loading: false })
             })
             .catch(error => {
             })
@@ -230,7 +232,7 @@ const Messages = ({ currentChannel, currentUser }) => {
             </Modal>
             <ChannelHeader>
                 <HeaderRight>
-                    {currentChannel ? <div> {currentChannel.name} <FontAwesomeIcon size='1x' icon={faStar} />
+                    {currentChannel ? <div> <FontAwesomeIcon size='1x' icon={isPrivate ? faAt : faStar} /> {currentChannel.name}
                         <div style={{ fontSize: '16px' }}>{users}</div>
                     </div>
                         : null}
@@ -251,6 +253,7 @@ const Messages = ({ currentChannel, currentUser }) => {
                 :
                 <MsgWindow>
                     {messageSearch ? displayMessages(searchList) : displayMessages(messages)}
+                    {message.loading ? <LoadingPage /> : null}
                 </MsgWindow>
             }
             <NewMessage>
