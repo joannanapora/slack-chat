@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ChannelsContainer, AddIcon, Channel, ScrollChannels, ChannelDiv } from '../../../styledComponents/ChannelsStyled';
+import { ChannelsContainer, AddIcon, Channel, ScrollChannels, ChannelDiv, Notification } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExchangeAlt, faPlus, faCheck, faTimes, faHashtag, faMailBulk, faEnvelopeSquare, faEnvelope, faAt, faDotCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExchangeAlt, faPlus, faCheck, faTimes, faHashtag, faEnvelope, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, FormHeader, FormInput, TextArea } from "../../../styledComponents/FormStyled"
 import firebase from '../../../firebase';
 import { setCurrentChannel, setPrivateChannel } from '../../../redux/actions';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
-const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
+const Channels = ({ currentUser, setCurrentChannel, currentChannel, setPrivateChannel }) => {
 
     const customStyles = {
         content: {
@@ -29,6 +29,7 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
     const [ChannelList, setChannelList] = useState([]);
     const [UserList, setUserList] = useState([]);
     const [activeChannel, setActiveChannel] = useState('');
+    const [activeUserChannel, setActiveUserChannel] = useState('');
     const [tabs, setOpenTabs] = useState({ channels: false, direct: false })
     const [usersRef] = useState(firebase.database().ref('users'))
     const [connectedRef] = useState(firebase.database().ref('.info/connected'))
@@ -37,7 +38,10 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
         name: '',
         info: '',
         ref: firebase.database().ref('channels')
-    })
+    });
+    const [channelWithNotification, setChannelNotification] = useState(null);
+    const [notifications, setNotifications] = useState([]);
+    const [messagesRef, setMessagesRef] = useState(firebase.database().ref('messages'))
 
 
     useEffect(() => {
@@ -60,6 +64,7 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
             .on('child_added', snap => {
                 loadedChannels.push(snap.val());
                 setChannelList([...ChannelList, ...loadedChannels]);
+                addNotificationListener(snap.key);
             })
         if (ChannelList.length > 0) {
             changeChannel(ChannelList[0])
@@ -106,6 +111,44 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
         })
     }
 
+    const removeUserListener = () => {
+        usersRef.off();
+    }
+
+
+    const addNotificationListener = (channelId) => {
+        messagesRef.child(channelId).on('value', snap => {
+            if (channelWithNotification) {
+                handleNotification(channelId, currentChannel.id, notifications, snap)
+            }
+        });
+    }
+
+    const handleNotification = (channelId, currentChannelId, notifications, snap) => {
+        let totalNots = 0;
+        let index = notifications.findIndex(notification => notification.id === channelId)
+        if (index !== -1) {
+            if (channelId !== currentChannelId) {
+                totalNots = notifications[index].total
+
+                if (snap.numChildren() - totalNots > 0) {
+                    notifications[index].cout = snap.numChildren() - totalNots;
+                }
+            }
+
+            notifications[index].lastKnownTotal = snap.numChildren();
+
+        } else {
+            notifications.push({
+                id: channelId,
+                total: snap.numChildren(),
+                lastKnownTotal: snap.numChildren(),
+                count: 0
+            });
+        }
+
+        setNotifications(notifications);
+    }
 
     const addStatusToUser = (userId, connected = true) => {
         const updatedUser = UserList.reduce((acc, currentUser) => {
@@ -117,9 +160,6 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
         setUserList(updatedUser);
     }
 
-    const removeUserListener = () => {
-        usersRef.off();
-    }
 
 
     const closeModal = () => {
@@ -182,7 +222,9 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
             name: clickedUser.name
         }
         setPrivateChannel(true);
-        setCurrentChannel(channelData)
+        setCurrentChannel(channelData);
+        setActiveUserChannel(clickedUser.id);
+        setActiveChannel('')
     }
 
     const getChannelId = (userId) => {
@@ -193,15 +235,25 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
     const displayChannels = () => {
         return ChannelList.length > 0 && ChannelList.map((el) => {
             return (
-                <Channel active={el.id === activeChannel} key={el.id} onClick={() => changeChannel(el)} name={el.name} ><FontAwesomeIcon size='1x' style={{ marginRight: '5px' }} icon={faHashtag} />{el.name} </Channel>
+                <Channel active={el.id === activeChannel} key={el.id} onClick={() => changeChannel(el)} name={el.name} ><FontAwesomeIcon size='1x' style={{ marginRight: '5px' }} icon={faHashtag} />{el.name}{getNotificationCount(el) && <Notification>{getNotificationCount(el)}</Notification>}</Channel>
             )
         })
     };
 
+    const getNotificationCount = (channel) => {
+        let count = 0;
+        notifications.forEach(el => {
+            if (el.id === currentChannel.id) {
+                count = el.count
+            }
+        });
+        if (count > 0) return count;
+    }
+
     const displayUsers = () => {
         return UserList.length > 0 && UserList.map((el) => {
             return (
-                <Channel key={el.id} onClick={() => changeUserChannel(el)} ><FontAwesomeIcon size='1x' style={{ marginRight: '5px' }} color={isUserOnline(el.status)} icon={faDotCircle} />{el.name} </Channel>
+                <Channel active={el.id === activeUserChannel} key={el.id} onClick={() => changeUserChannel(el)} ><FontAwesomeIcon size='1x' style={{ marginRight: '5px' }} color={isUserOnline(el.status)} icon={faDotCircle} />{el.name} </Channel>
             )
         })
     };
@@ -211,6 +263,9 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
         setActiveChannel(channelProp.id);
         setCurrentChannel(channelProp);
         setPrivateChannel(false);
+        setActiveUserChannel('');
+        setChannelNotification(channelProp);
+        clearNotifications();
     }
 
     const openTabs = (prop) => {
@@ -218,6 +273,18 @@ const Channels = ({ currentUser, setCurrentChannel, setPrivateChannel }) => {
         if (prop === 'direct') { setOpenTabs({ ...tabs, direct: !tabs.direct }) }
     }
 
+    const clearNotifications = () => {
+        let index = notifications.findIndex(notification => notification.id === currentChannel.id)
+
+        if (index !== -1) {
+            let updatedNotifications = [...notifications];
+            updatedNotifications[index].total = notifications[index].lastKnownTotal;
+            updatedNotifications[index].count = 0;
+            setNotifications(updatedNotifications);
+        } else {
+
+        }
+    }
 
 
 

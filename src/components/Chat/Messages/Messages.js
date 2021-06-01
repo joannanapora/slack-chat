@@ -34,6 +34,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
         errors: [],
         messagesLoading: true,
     });
+    const [privateMessagesRef, setPrivateMessagesRef] = useState(firebase.database().ref('privateMessages'),)
     const [isPrivate, setIsPrivate] = useState(isPrivateChannel);
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('')
@@ -55,11 +56,19 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
         setModal(false)
     }
 
+    const getPath = () => {
+        return isPrivateChannel ? 'chat/public' : `chat/private-${currentChannel.id}`
+    }
+
+    const getMessagesRef = () => {
+        return isPrivate ? privateMessagesRef : message.ref;
+    }
+
     const onDrop = acceptedFiles => {
         setFile(acceptedFiles[0]);
         setFileName(acceptedFiles[0].name);
         setMessage({ ...message, message: acceptedFiles[0].name })
-        const filePath = `chat/public/${uuid()}.jpg`;
+        const filePath = `${getPath()}/${uuid()}.jpg`;
         setUploadState('uplouding');
         setUploadTask(storageRef.child(filePath).put(acceptedFiles[0]));
         setMessage({ ...message, loading: true })
@@ -69,7 +78,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
         () => {
             const pathToUpload = currentChannel.id;
-            const reference = message.ref;
+            const reference = getMessagesRef();
             uploudTask.snapshot.ref.getDownloadURL()
                 .then(downloadUrl => {
                     sendFileMessage(downloadUrl, reference, pathToUpload)
@@ -101,7 +110,8 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
     const addMessageListener = (channelId) => {
         let loadedMessages = [];
-        message.ref.child(channelId).on('child_added', snap => {
+        const ref = getMessagesRef();
+        ref.child(channelId).on('child_added', snap => {
             loadedMessages.push(snap.val());
             setMessage({ ...message, messagesLoading: false })
             setMessages(loadedMessages)

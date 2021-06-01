@@ -214,3 +214,12 @@ overflow-y: auto;
 height:80vh;
 padding: 0 40px 0 10px;
 `
+
+export const Notification = styled.div`
+background-color: red;
+color: white;
+font-size: 0.8rem;
+padding: 0.1rem 0.3rem ;
+display: flex;
+margin-left: 1rem;
+`

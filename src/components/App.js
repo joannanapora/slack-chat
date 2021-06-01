@@ -12,7 +12,7 @@ const Application = ({ currentUser, currentChannel, isPrivateChannel }) => {
   return (
     <AppContainer>
       <ColorPanel></ColorPanel>
-      <SidePanel><LeftPanel key={currentUser && currentUser.uid} currentUser={currentUser} /></SidePanel>
+      <SidePanel><LeftPanel key={currentUser && currentUser.uid} currentUser={currentUser} currentChannel={currentChannel} /></SidePanel>
       <Messages isPrivateChannel={isPrivateChannel} key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} >dwd</Messages>
       <MetaPanel>dfd</MetaPanel>
     </AppContainer>
