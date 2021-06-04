@@ -9,7 +9,7 @@ const LeftPanel = ({ currentUserProp, currentChannel }) => {
     const [dropdown, setDropdown] = useState(false);
 
     const handleDropdown = () => {
-        setDropdown(!dropdown)
+        setDropdown(!dropdown);
     }
 
     const handleOptionSelect = (key) => {
