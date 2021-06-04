@@ -53,7 +53,7 @@ background: transparent;
 
 export const ChannelHeader = styled.div`
 display: flex;
-background: #FAFAFA;
+background-color: #FAFAFA;
 height: 50px;
 box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 10px 20px;

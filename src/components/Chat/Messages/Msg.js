@@ -19,7 +19,7 @@ const Msg = ({ message, user }) => {
             <MsgContent mine={message.user.id === user.uid} >
                 <div style={{ display: 'flex' }} >
                     <Username>
-                        {user.displayName}
+                        {user}
                     </Username>
                     <Date>{timeFromNow(message.timestamp)}</Date>
                 </div>

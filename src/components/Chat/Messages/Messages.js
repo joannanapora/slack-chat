@@ -2,13 +2,15 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { MessagesContainer, NoChannel, ButtonContainer, MessageInput, WriteMessage, NewMessage, MsgWindow, SearchInput, ChannelHeader, HeaderLeft, HeaderRight } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faSearch, faAt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Spinner } from '../../../styledComponents/FormStyled';
+import { Button } from '../../../styledComponents/FormStyled';
 import Msg from './Msg';
 import FileModal from './FileModal';
 import firebase from '../../../firebase';
 import Modal from 'react-modal';
 import { v4 as uuid } from 'uuid';
 import LoadingPage from '../../Spinner/Spinner';
+import { connect } from 'react-redux';
+import { setUserPosts } from '../../../redux/actions';
 
 const customStyles = {
     content: {
@@ -25,7 +27,7 @@ const customStyles = {
     }
 };
 
-const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
+const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, setUserPosts }) => {
 
     const [message, setMessage] = useState({
         ref: firebase.database().ref('messages'),
@@ -34,11 +36,11 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
         errors: [],
         messagesLoading: true,
     });
-    const [privateMessagesRef, setPrivateMessagesRef] = useState(firebase.database().ref('privateMessages'),)
-    const [isPrivate, setIsPrivate] = useState(isPrivateChannel);
+    const [privateMessagesRef] = useState(firebase.database().ref('privateMessages'),)
+    const [isPrivate] = useState(isPrivateChannel);
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('')
-    const [storageRef, setStorageRef] = useState(firebase.storage().ref())
+    const [storageRef] = useState(firebase.storage().ref())
     const [uploudTask, setUploadTask] = useState(null);
     const [uploudState, setUploadState] = useState('')
     const [messages, setMessages] = useState([]);
@@ -83,7 +85,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
                 .then(downloadUrl => {
                     sendFileMessage(downloadUrl, reference, pathToUpload)
                 })
-                .catch(err => console.log(err))
+                .catch(err => { })
         },
         [uploudTask],
     )
@@ -117,6 +119,23 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
             setMessages(loadedMessages)
             countUniqueUsers(loadedMessages)
         })
+        countUserPosts(loadedMessages);
+    }
+
+    const countUserPosts = (messages) => {
+        const userPosts = messages.reduce((acc, message) => {
+            if (message.user.name in acc) {
+                acc[message.user.name].count += 1
+            }
+            else {
+                acc[message.user.name] = {
+                    avatar: message.user.avatar,
+                    count: 1
+                }
+            }
+            return acc;
+        }, {})
+        setUserPosts(userPosts)
     }
 
     const countUniqueUsers = (messages) => {
@@ -180,7 +199,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
                 <Msg
                     key={el.timestamp}
                     message={el}
-                    user={currentUser}
+                    user={el.user.name}
                 ></Msg>
             )
         })
@@ -242,7 +261,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
             </Modal>
             <ChannelHeader>
                 <HeaderRight>
-                    {currentChannel ? <div> <FontAwesomeIcon size='1x' icon={isPrivate ? faAt : faStar} /> {currentChannel.name}
+                    {currentChannel ? <div> <FontAwesomeIcon onClick={addToStared} size='1x' icon={isPrivate ? faAt : faStar} /> {currentChannel.name}
                         <div style={{ fontSize: '16px' }}>{users}</div>
                     </div>
                         : null}
@@ -280,4 +299,4 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 }
 
 
-export default Messages;
+export default connect(null, { setUserPosts })(Messages);
