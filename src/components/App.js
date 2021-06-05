@@ -17,7 +17,7 @@ const Application = ({ currentUser, currentChannel, isPrivateChannel, userPosts 
       />
 
       <Messages isPrivateChannel={isPrivateChannel} key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} ></Messages>
-      {!isPrivateChannel && currentChannel !== null ?
+      {!isPrivateChannel && !currentUser ?
         <MetaPanel userPosts={userPosts} currentChannel={currentChannel} />
         : <div></div>
       }

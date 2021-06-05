@@ -25,7 +25,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             display: 'flex'
         }
     };
-
+    const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [ChannelList, setChannelList] = useState([]);
     const [UserList, setUserList] = useState([]);
@@ -48,13 +48,16 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
     const pageLoadingVariable = !currentUser;
 
     useEffect(() => {
-        if (currentUser !== previousCurrentUserRef && !pageLoadingVariable) {
-            addChannelListener()
-            addUserListerner()
+        if (!!currentUser) {
+            addUserListerner();
+            addChannelListener();
         }
         return () => {
             removeChannelListener();
             removeUserListener();
+            setCurrentChannel('');
+            setActiveChannel('');
+            setPrivateChannel(false)
         }
     }, [currentUser]);
 
@@ -63,7 +66,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
         channel.ref
             .on('child_added', snap => {
                 loadedChannels.push(snap.val());
-                setChannelList([...ChannelList, ...loadedChannels]);
+                setChannelList([...loadedChannels]);
                 addNotificationListener(snap.key);
             })
         if (ChannelList.length > 0) {
@@ -85,7 +88,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
                     user['uid'] = snap.key;
                     user['status'] = 'offline'
                     loadedUsers.push(user);
-                    setUserList([...UserList, ...loadedUsers]);
+                    setUserList([...loadedUsers]);
                 }
             })
         connectedRef.on('value', snap => {
