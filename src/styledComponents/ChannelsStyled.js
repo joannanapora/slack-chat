@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { css } from 'styled-components';
+import { css, keyframes } from 'styled-components';
 
 
 export const ChannelsContainer = styled.div`
@@ -222,4 +222,47 @@ font-size: 0.8rem;
 padding: 0.1rem 0.3rem ;
 display: flex;
 margin-left: 1rem;
+`
+
+
+
+
+const dotTyping = keyframes`
+  0% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+  16.667% {
+    box-shadow: 9984px -10px 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+  33.333% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+  50% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px -10px 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+  66.667% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+  83.333% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px -10px 0 0 #f0c419;
+  }
+  100% {
+    box-shadow: 9984px 0 0 0 #f0c419, 9999px 0 0 0 #f0c419, 10014px 0 0 0 #f0c419;
+  }
+`
+export const DotTypingBox = styled.div`
+width: 100%;
+justify-content:center;
+margin: 10px 20px;
+`
+export const DotTyping = styled.div`
+position: relative;
+left: -9999px;
+width: 10px;
+height: 10px;
+border-radius: 5px;
+background-color: orange;
+color: orange;
+box-shadow: 9984px 0 0 0 orange, 9999px 0 0 0 orange, 10014px 0 0 0 orange;
+animation: ${dotTyping} 1.5s infinite linear;
 `

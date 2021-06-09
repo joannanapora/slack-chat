@@ -63,8 +63,8 @@ export const DropDownHeader = styled("div")`
   background-color: transparent;
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
+  margin-left: 1rem;
 `;
 
 export const DropDownListContainer = styled("div")`
@@ -72,7 +72,6 @@ export const DropDownListContainer = styled("div")`
 
 export const DropDownList = styled("div")`
 width: 150px;
-height: 150px;
 `;
 
 export const ListItem = styled("button")`

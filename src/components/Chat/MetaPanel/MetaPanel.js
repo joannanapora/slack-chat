@@ -30,7 +30,7 @@ const MetaPanel = ({ currentChannel, userPosts }) => {
                 <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faPen} /> Created By
                 <MetaInfo user ><Image src={currentChannel?.createdBy.avatar} ></Image>{currentChannel?.createdBy.name}</MetaInfo>
             </MetaDetails>
-            <MetaDetails>
+            <MetaDetails top >
                 <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faTrophy} /> Top Posters
                 {displayTopPosters()}
             </MetaDetails>

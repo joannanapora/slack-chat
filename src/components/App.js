@@ -6,10 +6,10 @@ import ColorPanel from './Chat/ColorPanel/ColorPanel';
 import Messages from './Chat/Messages/Messages';
 import MetaPanel from './Chat/MetaPanel/MetaPanel';
 
-const Application = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => {
+const Application = ({ currentUser, currentChannel, isPrivateChannel, userPosts, hidePanel }) => {
   return (
     <AppContainer>
-      <ColorPanel></ColorPanel>
+      <ColorPanel ></ColorPanel>
 
       <LeftPanel
         currentChannel={currentChannel}
@@ -17,7 +17,7 @@ const Application = ({ currentUser, currentChannel, isPrivateChannel, userPosts 
       />
 
       <Messages isPrivateChannel={isPrivateChannel} key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel} ></Messages>
-      {!isPrivateChannel && !currentUser ?
+      {!isPrivateChannel && currentChannel && currentUser ?
         <MetaPanel userPosts={userPosts} currentChannel={currentChannel} />
         : <div></div>
       }

@@ -25,7 +25,6 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             display: 'flex'
         }
     };
-    const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [ChannelList, setChannelList] = useState([]);
     const [UserList, setUserList] = useState([]);
@@ -43,9 +42,6 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
     const [channelWithNotification, setChannelNotification] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [messagesRef] = useState(firebase.database().ref('messages'));
-
-    const previousCurrentUserRef = useRef(currentUser);
-    const pageLoadingVariable = !currentUser;
 
     useEffect(() => {
         if (!!currentUser) {
