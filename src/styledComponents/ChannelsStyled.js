@@ -5,7 +5,7 @@ import { css, keyframes } from 'styled-components';
 export const ChannelsContainer = styled.div`
 width: 100%;
 display: flex;
-justify-content:center;
+justify-content:left;
 align-items:center;
 text-align:center;
 font-size: 15px;
@@ -14,9 +14,14 @@ cursor: pointer;
 
 export const AddIcon = styled.div`
 display: flex;
-justify-content: flex-end;
-width:100%;
 cursor:pointer;
+color: black;
+font-size: 1rem;
+justify-content: flex-end;
+align-items:center;
+&:hover {
+  color: #f0c419;
+}
 `
 
 export const Channel = styled.div`
@@ -186,8 +191,8 @@ margin-top: 10px;
 `
 
 export const ChannelDiv = styled.div`
-overflow-x: hidden;
-height: auto;
+overflow-x: scroll;
+height: 30rem;
 padding-bottom: 2rem;
 `
 
@@ -210,9 +215,8 @@ white-space: nowrap;
 `
 
 export const ScrollChannels = styled.div`
-overflow-y: auto;
 height:80vh;
-padding: 0 40px 0 10px;
+padding: 0 20px 0px 20px;
 `
 
 export const Notification = styled.div`

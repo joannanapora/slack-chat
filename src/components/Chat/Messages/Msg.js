@@ -2,7 +2,7 @@ import React from 'react';
 import { Comment, AvatarContainer, Username, Date, Text, MsgContent } from '../../../styledComponents/ChannelsStyled';
 import moment from 'moment';
 
-const Msg = ({ message, user }) => {
+const Msg = ({ message, user, currentUser }) => {
     const timeFromNow = (timestamp) => {
         return moment(timestamp).fromNow();
     }
@@ -18,10 +18,10 @@ const Msg = ({ message, user }) => {
 
     return (
         <Comment isMine={message.user.id === user.uid}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.7rem' }} >
                 <AvatarContainer src={message.user.avatar} alt='av'></AvatarContainer>
             </div>
-            <MsgContent mine={message.user.id === user.uid} >
+            <MsgContent mine={user === currentUser.displayName} >
                 <div style={{ display: 'flex' }} >
                     <Username>
                         {user}
