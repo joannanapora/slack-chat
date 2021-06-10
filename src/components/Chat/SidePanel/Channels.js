@@ -153,12 +153,14 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             .then(() => {
                 closeModal();
                 setChannel({ ...channel, name: "", info: "" });
-                changeChannel(ChannelList[ChannelList.length])
+                changeChannel(newChannel)
             })
             .catch((error) => {
             })
 
     }
+
+    console.log(ChannelList[ChannelList.length - 1])
 
     const onSubmit = (event) => {
         event.preventDefault();
