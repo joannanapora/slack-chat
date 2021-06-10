@@ -63,7 +63,6 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             .on('child_added', snap => {
                 loadedChannels.push(snap.val());
                 setChannelList([...loadedChannels]);
-                addNotificationListener(snap.key);
             })
         if (ChannelList.length > 0) {
             changeChannel(ChannelList[0])
@@ -114,40 +113,6 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
         usersRef.off();
     }
 
-
-    const addNotificationListener = (channelId) => {
-        messagesRef.child(channelId).on('value', snap => {
-            if (channelWithNotification) {
-                handleNotification(channelId, currentChannel.id, notifications, snap)
-            }
-        });
-    }
-
-    const handleNotification = (channelId, currentChannelId, notifications, snap) => {
-        let totalNots = 0;
-        let index = notifications.findIndex(notification => notification.id === channelId)
-        if (index !== -1) {
-            if (channelId !== currentChannelId) {
-                totalNots = notifications[index].total
-
-                if (snap.numChildren() - totalNots > 0) {
-                    notifications[index].cout = snap.numChildren() - totalNots;
-                }
-            }
-
-            notifications[index].lastKnownTotal = snap.numChildren();
-
-        } else {
-            notifications.push({
-                id: channelId,
-                total: snap.numChildren(),
-                lastKnownTotal: snap.numChildren(),
-                count: 0
-            });
-        }
-
-        setNotifications(notifications);
-    }
 
     const addStatusToUser = (userId, connected = true) => {
         const updatedUser = UserList.reduce((acc, currentUser) => {
@@ -266,7 +231,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
         }
         setPrivateChannel(true);
         setCurrentChannel(channelData);
-        setActiveUserChannel(clickedUser.id);
+        setActiveUserChannel(channelData.id);
         setActiveChannel('')
     }
 
@@ -297,12 +262,6 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             {tabs.channels &&
                 <ChannelDiv >
                     {displayChannels()}
-                </ChannelDiv>
-            }
-            <ChannelsContainer onClick={() => openTabs('direct')} style={{ justifyContent: 'start' }} ><FontAwesomeIcon style={{ marginRight: '5px' }} icon={faEnvelope} />DIRECT MESSAGES <p style={{ marginLeft: '5px' }} >({UserList.length})</p></ChannelsContainer>
-            {tabs.direct &&
-                <ChannelDiv >
-                    {displayUsers()}
                 </ChannelDiv>
             }
             <Modal

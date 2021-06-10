@@ -3,7 +3,8 @@ import styled from 'styled-components'
 
 export const AppContainer = styled.div`
 display: grid;
-grid-template-columns: 80px auto 1fr 1fr ;
+grid-template-columns: 300px 1fr 1fr;
+overflow: hidden;
 `
 
 export const SidePanel = styled.div`
@@ -14,7 +15,6 @@ background-color: #FAFAFA;
 height:100vh;
 min-width: 280px;
 `
-
 
 export const Messages = styled.div`
 background-color: rgba(255, 255, 255, 0.8);

@@ -39,9 +39,9 @@ ${props => props.active && css`
 export const ColorPanelContainer = styled.div`
 background-color: black;
 width: 100%;
-height: 100%;
-display:flex;
-justify-content: center;
+height: 2rem;
+color: white;
+position: absolute;
 `
 
 
@@ -107,7 +107,7 @@ margin: 10px 20px;
 padding: 20px;
 position: fixed;
 bottom:1em;
-margin-left: 360px;
+margin-left: 320px;
 left: 0;
 right: 1em;
 z-index: 200;

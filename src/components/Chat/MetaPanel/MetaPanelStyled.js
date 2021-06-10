@@ -20,7 +20,7 @@ font-family: 'Crete Round',serif;
 margin: 10px 20px 0px 0px;
 padding: 1rem;
 ${props => props.top && css`
-  height: 15rem;
+  max-height: 15rem;
   overflow-y: scroll;
 `}
 `

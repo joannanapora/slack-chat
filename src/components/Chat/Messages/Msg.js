@@ -11,6 +11,11 @@ const Msg = ({ message, user }) => {
         return !!message.image;
     }
 
+    if (!user) {
+        return (<Comment >
+        </Comment>)
+    }
+
     return (
         <Comment isMine={message.user.id === user.uid}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >

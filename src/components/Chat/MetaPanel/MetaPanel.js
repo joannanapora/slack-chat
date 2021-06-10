@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MetaPanelContainer, MetaDetails, MetaInfo } from './MetaPanelStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo, faPen, faTrophy } from '@fortawesome/free-solid-svg-icons';

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { MessagesContainer, NoChannel, ButtonContainer, DotTypingBox, MessageInput, WriteMessage, NewMessage, MsgWindow, SearchInput, ChannelHeader, HeaderLeft, DotTyping, HeaderRight } from '../../../styledComponents/ChannelsStyled';
+import { MessagesContainer, NoChannel, Comment, ButtonContainer, DotTypingBox, MessageInput, WriteMessage, NewMessage, MsgWindow, SearchInput, ChannelHeader, HeaderLeft, DotTyping, HeaderRight } from '../../../styledComponents/ChannelsStyled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faSearch, faAt } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../styledComponents/FormStyled';
@@ -49,9 +49,7 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
     const [messageSearch, setMessageSearch] = useState('');
     const [searchList, setSearchResult] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
-    const [typingRef] = useState(firebase.database().ref('typing'))
-    const [typingUsers, setTypingUsers] = useState([]);
-    const [connectedRef] = useState(firebase.database().ref('.info/connected'));
+    const [topPosters, setTopPosters] = useState(null)
 
     const openModal = () => {
         setModal(true)
@@ -103,10 +101,9 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
     useEffect(() => {
 
         if (currentUser && currentChannel) {
+            setUserPosts(null)
             addListener(currentChannel.id);
         }
-
-
 
 
     }, [fileName, file, message.message])
@@ -122,7 +119,6 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
 
     const addListener = (channelId) => {
         addMessageListener(channelId);
-        addTypingListener(channelId);
     };
 
     useEffect(() => {
@@ -138,36 +134,9 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
             setMessage({ ...message, messagesLoading: false })
             setMessages(loadedMessages)
             countUniqueUsers(loadedMessages)
-        })
-        countUserPosts(loadedMessages);
+            countUserPosts(loadedMessages);
+        });
     }
-
-    const addTypingListener = (channelId) => {
-        let typingUsers = [];
-        typingRef.child(channelId).on('child_added', snap => {
-            if (snap.key !== currentUser.uid) {
-                typingUsers = typingUsers.concat({
-                    id: snap.key,
-                    name: snap.val()
-                });
-                setTypingUsers(typingUsers)
-            }
-        })
-        typingRef.child(channelId).on('child_removed', snap => {
-            const index = typingUsers.findIndex(currentUser => currentUser.id === snap.key)
-            if (index !== -1) {
-                typingUsers = typingUsers.filter(() => currentUser.id !== snap.key);
-                setTypingUsers(typingUsers)
-            }
-        })
-        connectedRef.on('value', snap => {
-            if (snap.val() === true) {
-                typingRef.child(channelId).child(currentUser.uid).onDisconnect().remove(err => {
-                })
-            }
-        })
-    }
-
 
     const countUserPosts = (messages) => {
         const userPosts = messages.reduce((acc, message) => {
@@ -184,6 +153,10 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
         }, {})
         setUserPosts(userPosts)
     }
+
+
+
+
 
     const countUniqueUsers = (messages) => {
         const uniqueUsers = messages.reduce((acc, message) => {
@@ -230,7 +203,6 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
                 .set(createMessage())
                 .then(() => {
                     setMessage({ ...message, loading: false, message: '', errors: [] })
-                    typingRef.child(currentChannel.id).child(currentUser.uid).remove()
                 })
                 .catch(error => {
                     setMessage({ ...message, loading: false, errors: message.errors.concat(error) })
@@ -242,7 +214,7 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
     };
 
     const displayMessages = () => {
-        return messages.length > 0 && messages.map((el, index) => {
+        return messages.length > 0 && messages.map((el, i) => {
             return (
                 <Msg
                     key={el.timestamp}
@@ -256,12 +228,6 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
     const checkifEnter = (e) => {
         if (e.key === "Enter") {
             sendMessage()
-        }
-        if (message.message) {
-            typingRef.child(currentChannel.id).child(currentUser.uid).set(currentUser.displayName)
-        }
-        if (message.message = '') {
-            typingRef.child(currentChannel.id).child(currentUser.uid).remove()
         }
     }
 
@@ -302,12 +268,6 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
         setSearchResult(searchResult)
     }
 
-    const displayTypingUsers = () => {
-        typingUsers.length > 0 &&
-            <DotTypingBox >
-                <DotTyping />
-            </DotTypingBox>
-    }
 
     return (
         <MessagesContainer>
@@ -344,8 +304,7 @@ const Messages = ({ addToStared, currentChannel, currentUser, isPrivateChannel, 
                 <MsgWindow>
                     {messageSearch ? displayMessages(searchList) : displayMessages(messages)}
                     {message.loading ? <LoadingPage /> : null}
-                    {displayTypingUsers()}
-                    <div ref={divRef} ></div>
+                    <Comment key={321312} ref={divRef} ></Comment>
                 </MsgWindow>
             }
             <NewMessage>
