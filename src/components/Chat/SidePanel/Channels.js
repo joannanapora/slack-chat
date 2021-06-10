@@ -56,7 +56,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
         let loadedChannels = [];
         channel.ref
             .on('child_added', snap => {
-                loadedChannels.push(snap.val());
+                loadedChannels.unshift(snap.val());
                 setChannelList([...loadedChannels]);
             })
         if (ChannelList.length > 0) {
@@ -153,7 +153,7 @@ const Channels = ({ currentUser, currentChannel, setCurrentChannel, setPrivateCh
             .then(() => {
                 closeModal();
                 setChannel({ ...channel, name: "", info: "" });
-                changeChannel(newChannel)
+                changeChannel(newChannel);
             })
             .catch((error) => {
             })

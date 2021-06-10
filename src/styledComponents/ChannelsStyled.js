@@ -99,6 +99,7 @@ margin: 0 20px;
 padding: 10px;
 overflow-y: scroll;
 height: 28rem;
+overflow-x: hidden;
 `
 
 
