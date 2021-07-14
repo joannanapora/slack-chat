@@ -12,7 +12,7 @@ background-color: rgba(255, 255, 255, 0.8);
 text-align: center;
 font-size: 30px;
 background-color: #FAFAFA;
-height:100vh;
+height: 100vh;
 min-width: 280px;
 `
 
@@ -48,7 +48,9 @@ align-items: center;
 width: 100%;
 font-family: 'Crete Round', serif;
 font-size: 2rem;
-font-weight: 900;`
+font-weight: 900;
+`
+
 
 export const DropDownContainer = styled("div")`
   margin: 0 auto;

@@ -98,7 +98,7 @@ box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 margin: 0 20px;
 padding: 10px;
 overflow-y: scroll;
-height: 28rem;
+height: 70vh;
 overflow-x: hidden;
 `
 
@@ -192,9 +192,10 @@ margin-top: 10px;
 `
 
 export const ChannelDiv = styled.div`
-overflow-x: scroll;
-height: 30rem;
+overflow-y: scroll;
 padding-bottom: 2rem;
+margin-bottom: 1rem;
+height: 75vh;
 `
 
 
@@ -216,7 +217,7 @@ white-space: nowrap;
 `
 
 export const ScrollChannels = styled.div`
-height:80vh;
+height:100%;
 padding: 0 20px 0px 20px;
 `
 
